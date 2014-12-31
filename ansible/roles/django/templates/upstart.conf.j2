@@ -6,7 +6,7 @@ respawn limit 10 5
 chdir /home/{{deployment_name}}/{{mode}}
 env PYTHON_PATH="/home/{{deployment_name}}/{{mode}}/venv/"
 env DJANGO_SETTINGS_MODULE="{{deployment_name}}.settings"
-env DJANGO_DSN_VALUE="{{dsn}}"
+env DJANGO_DSN_VALUE="{{sentry_key}}"
 env DJANGO_SECRET_KEY="{{secret_key}}"
 env DATABASE_URL="postgres://{{deployment_name}}:{{dbpass}}@localhost/{{deployment_name}}_{{mode}}"
 env DJANGO_CONFIGURATION="{{mode}}"
