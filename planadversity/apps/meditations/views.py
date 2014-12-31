@@ -48,7 +48,7 @@ class HomepageView(TemplateView):
 
         try:
             responded = Response.objects.filter(meditation=meditation,
-                                                user=self.request.user)[0]
+                                                user=self.request.user.id)[0]
         except IndexError:
             pass
 
@@ -71,11 +71,11 @@ class MeditationListView(JsonView, ListView):
         try:
             meditation = Meditation.objects.get(date=datetime.now().date()+timedelta(days=4))
             responded = Response.objects.filter(meditation=meditation,
-                                                user=self.request.user)
+                                                user=self.request.user.id)
         except:
             pass
 
-        context['responses'] = Response.objects.filter(user=self.request.user)
+        context['responses'] = Response.objects.filter(user=self.request.user.id)
         context['meditation'] = meditation
         context['responded'] = responded
         return context
@@ -86,7 +86,7 @@ class ResponseDetailView(JsonView, views.LoginRequiredMixin,  DetailView):
 
     def get_queryset(self, *args, **kwargs):
         if self.request.user.is_authenticated():
-            return Response.objects.filter(user=self.request.user)
+            return Response.objects.filter(user=self.request.user.id)
         return Response.objects.all()
 
 
@@ -95,7 +95,7 @@ class ResponseListView(JsonView, views.LoginRequiredMixin,  ListView):
 
     def get_queryset(self, *args, **kwargs):
         if self.request.user.is_authenticated():
-            return Response.objects.filter(user=self.request.user)
+            return Response.objects.filter(user=self.request.user.id)
         return Response.objects.all()
 
 class ResponseCreateView(JsonView, views.LoginRequiredMixin,  CreateView):
