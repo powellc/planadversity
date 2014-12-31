@@ -75,13 +75,13 @@ server {
         root /home/{{deployment_name}}/{{mode}}/public;                                                                               
 
         location /media {
-             alias /home/{{deployment_name}}/{{code_root}}/public/media;
+             alias /home/{{deployment_name}}/{{mode}}/public/media;
     	     access_log off;
              expires 31d;
         }
 
         location /static {
-             alias /home/{{deployment_name}}/{{code_root}}/public/static;
+             alias /home/{{deployment_name}}/{{mode}}/public/static;
       	     access_log off;
              expires 31d;
         }
@@ -99,7 +99,7 @@ server {
 
         error_page 500 502 503 504 /500.html;
         location = /500.html {
-                root /home/{{deployment_name}}/{{code_root}}/templates;
+                root /home/{{deployment_name}}/{{mode}}/templates;
         }
 }
 
