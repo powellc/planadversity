@@ -4,16 +4,13 @@
                 <ul class="nav navbar-nav">
                     {% if user.is_authenticated %}
                     <li>
-                    <a class="page-scroll" href="{% url 'account_signup' %}">Dashboard</a>
+                    <a class="page-scroll" href="{% url 'meditation-list' %}">Dashboard</a>
                     </li>
                     <li>
-                    <a class="page-scroll" href="{% url 'account_signup' %}">Proposals</a>
+                    <a class="page-scroll" href="{% url 'response-list' %}">Responses</a>
                     </li>
                     <li>
-                    <a class="page-scroll" href="{% url 'account_signup' %}">Projects</a>
-                    </li>
-                    <li>
-                    <a class="page-scroll" href="{% url 'account_logout' %}">Log out</a>
+                    <li><form id="logout" action="{% url 'account_logout' %}" method="post">{% csrf_token %}</form><a href="#" onclick="javscript:$('#logout').submit()"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
                     </li>
                     {% else %}
                     <li>

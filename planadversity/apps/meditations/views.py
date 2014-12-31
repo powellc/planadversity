@@ -1,15 +1,14 @@
 import json
+from datetime import datetime, timedelta
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, FormView
-from django.views.generic import DetailView, ListView, View
+from django.views.generic import DetailView, ListView, View, TemplateView
 from django.core import serializers
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 
-from .models import Meditation, Topic, Technology, Event, Buzz
-from workers.models import Worker
-from .forms import MeditationForm, TopicForm, EventForm, TechnologyForm, BuzzForm
-from .utils import send_email
+from .models import Meditation, Response
+from .forms import ResponseForm
 from braces import views
 
 
@@ -17,11 +16,6 @@ class JsonView(views.CsrfExemptMixin,
                views.JsonRequestResponseMixin,
                views.JSONResponseMixin, View):
     pass
-
-
-class MeditationUpdateView(views.LoginRequiredMixin, UpdateView):
-    model = Meditation
-    form_class = MeditationForm
 
 
 class MeditationDetailView(JsonView, DetailView):
@@ -37,6 +31,99 @@ class MeditationListJSONView(JsonView, ListView):
                                         self.get_queryset().all())
 
         return self.render_json_response(context)
+
+
+class HomepageView(TemplateView):
+    template_name = 'homepage.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(HomepageView, self).get_context_data(*args, **kwargs)
+        meditation = None
+        responded = None
+
+        try:
+            meditation = Meditation.objects.get(date=datetime.now().date()+timedelta(days=4))
+        except:
+            pass
+
+        try:
+            responded = Response.objects.filter(meditation=meditation,
+                                                user=self.request.user)[0]
+        except IndexError:
+            pass
+
+        context['todays_meditation'] = meditation
+        context['responded'] = responded
+        return context
+
+
+class MeditationListView(JsonView, ListView):
+    model = Meditation
+    form_class = ResponseForm
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(MeditationListView, self).get_context_data(*args, **kwargs)
+        meditation = None
+        responses = None
+
+        # TODO: Cache this for one day, only refreshing it if the user asks for a new random
+        # TODO: Should grab non-repsonded to meditations if possible
+        try:
+            meditation = Meditation.objects.get(date=datetime.now().date()+timedelta(days=4))
+            responded = Response.objects.filter(meditation=meditation,
+                                                user=self.request.user)
+        except:
+            pass
+
+        context['responses'] = Response.objects.filter(user=self.request.user)
+        context['meditation'] = meditation
+        context['responded'] = responded
+        return context
+
+
+class ResponseDetailView(JsonView, views.LoginRequiredMixin,  DetailView):
+    model = Response
+
+    def get_queryset(self, *args, **kwargs):
+        if self.request.user.is_authenticated():
+            return Response.objects.filter(user=self.request.user)
+        return Response.objects.all()
+
+
+class ResponseListView(JsonView, views.LoginRequiredMixin,  ListView):
+    model = Response
+
+    def get_queryset(self, *args, **kwargs):
+        if self.request.user.is_authenticated():
+            return Response.objects.filter(user=self.request.user)
+        return Response.objects.all()
+
+class ResponseCreateView(JsonView, views.LoginRequiredMixin,  CreateView):
+    model = Response
+    form_class = ResponseForm
+
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ResponseCreateView, self).get_context_data(*args, **kwargs)
+        meditation = None
+
+        try:
+            meditation = Meditation.objects.get(slug=self.request.GET.get('meditation'))
+        except:
+            pass
+
+        context['meditation'] = meditation
+        return context
+
+
+    def get_success_url(self):
+        return reverse('homepage', args=()) + '#about'
+
+    def form_valid(self, form):
+        form = form.save(commit=False)
+        form.user = self.request.user
+        form.save()
+        return super(ResponseCreateView, self).form_valid(form)
 
 
 '''
@@ -82,9 +169,4 @@ class MeditationLeaveView(JsonView, views.LoginRequiredMixin):
         return self.render_json_response(
             {'user': user.username, 'html': html, 'fragments': fragments})
 '''
-
-
-class MeditationListView(JsonView, ListView):
-    model = Meditation
-    form_class = MeditationForm
 

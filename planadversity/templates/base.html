@@ -8,12 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block meta %}
-    <meta name="description" content="A hack lab is a place where young people can learn about technology and discover that they can learn what they need to to make things work.">
-    <meta name="author" content="Hack Labs">
+    <meta name="description" content="An online tool for praticing the stoic exercise of premeditation of adversity. Plan for adversity provides daily exercises and a way to record your response.">
+    <meta name="author" content="Plan for Adversity">
     {% endblock meta %}
 
     {% block base_title %}
-    <title>{% block title %}Maine Hack Labs{% endblock title %}</title>
+    <title>{% block title %}Plan for Adversity{% endblock title %}</title>
     {% endblock base_title %}
 
     <!-- Bootstrap Core CSS -->
@@ -46,7 +46,7 @@
                     <i class="fa fa-bars"></i>
                 </button>
                 <a class="navbar-brand page-scroll" href="/">
-                    <i class="fa fa-play-circle"></i>  <span class="light">Maine</span> Hack Labs
+                    <i class="fa fa-frown-o"></i><i class="fa fa-smile-o"></i>  <span class="light">Plan</span> for Adversity
                 </a>
             </div>
 
@@ -59,20 +59,17 @@
                         <a href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#about">About</a>
+                        <a class="page-scroll" href="#about">Respond</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#how">How They Work</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#download">Join Now</a>
+                        <a class="page-scroll" href="#how">How This Works</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#contact">Contact</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li>
-                    <a class="page-scroll" href="{% url 'account_signup' %}">Dashboard</a>
+                    <a class="page-scroll" href="{% url 'meditation-list' %}">Dashboard</a>
                     </li>
                     {% else %}
                     <li>
@@ -97,8 +94,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
-                        <h1 class="brand-heading">Hack Labs</h1>
-                        <p class="intro-text">A place for middle school and high school students<br/>to imagine, collaborate, and <b>build</b>.</p>
+                        <h1 class="">Todays Meditation:</h1>
+                        <p class="intro-text">{{todays_meditation.text}}</p>
                         <a href="#about" class="btn btn-circle page-scroll">
                             <i class="fa fa-angle-double-down animated"></i>
                         </a>
@@ -110,14 +107,37 @@
 
     <!-- About Section -->
     <section id="about" class="container content-section text-center">
+        {% if not responded %}
+        <form method="POST" action="{% url 'response-create' %}">{% csrf_token %}
         <div class="row">
+            <div class="col-lg-4 col-lg-offset-2">
+                <h2>Initial Response</h2>
+                <p><input width="20" name="initial_response" type="text" placeholder="Your emotional response" />
+            </div>
+            <div class="col-lg-4">
+                <h2>Desired Response</h2>
+                <p><input type="text" name="desired_response" placeholder="Your emotional response" />
+            </div>
             <div class="col-lg-8 col-lg-offset-2">
-                <h2>About Hack Labs</h2>
-                <p>More and more our world is being run by devices. Little time passes in our lives when we are not connected. Young people in this world are often referred to as "digital natives" but aside from comfort using these devices, that means very&nbsp;little</p>
-                <p>Our goal with <b>Hack Labs</b> is to provide a unique environment where students can imagine what they want to build, and then find support from engaged mentors to turn those ideas into concrete learning experiences.</p>
-                <p><a href="#" class="btn">Sign up</a></p>
+                <p class="justify">Work through the best way to respond, adhering a close as possible to the stoic principals of detachment from what you cannot change, and changing what you can.</p>
+                <p><textarea name="notes" cols="50" rows="10"></textarea></p>
+                {% if not user.is_authenticated %}
+                <p><input class="btn btn-success" type="submit" value="Save & Sign Up" />
+                {% else %}
+                <p><input class="btn btn-success" type="submit" value="Save" />
+                {% endif %}
             </div>
         </div>
+        <input type="hidden" name="meditation" value="{{todays_meditation.slug}}" />
+        </form>
+        {% else %}
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h2>Thank you!</h2>
+                <p>You have already responded to today's meditation. If you would like to add a second response, please review your <a href="{% url 'meditation-list' %}">dashboard</a>.</p>
+            </div>
+        </div>
+        {% endif %}
     </section>
 
     <!-- How Section -->
@@ -125,23 +145,25 @@
         <div class="download-section">
             <div class="container">
                 <div class="col-lg-8 col-lg-offset-2">
-                    <h2>How Hack Labs Work</h2>
-                    <p>Hack Labs operate on a monthly cycle and,<br>work is done one day per week.</p>
+                    <h2>How Planning for Adversity Works</h2>
+                    <p>Adversity comes in many shapes and sizes. Some adversity, like major injury or death, can be catastrophic to our personal happiness. Other forms come in smaller, less significant forms. But we still must be prepared to choose our response wisely and compassionately.</p>
                 </div>
-                <div class="week col-md-3 col-lg-offset-2">
-                    <h3>Week One</h3>
-                    <h4><i>Exploration</i></h4>
-                    <p>The first week is open to <b>all ages</b>. Kids are invited to come for all or some of the session and get to explore a number of preset stations that cover a topic in technology, whether software or hardware or&nbsp;both.</p>
+                <div class="week col-md-4 col-lg-offset-2">
+                    <h3><span class="circle">1</span> Accept</h3>
+                    <p>We must accept a majority of events will be <b>beyond</b> our control.</p>
+                    <p>Here we provide scenarios that simulate adversity that could possibly confront us.</p>
                 </div>
-                <div class="week col-md-3">
-                    <h3>Weeks Two & Three</h3>
-                    <h4><i>Lab Work</i></h4>
-                    <p>The next two weeks are working days. These days the hack lab is limited to only those students who have proposals that have been accepted by a mentor.</p>
+                <div class="week col-md-4">
+                    <h3><span class="circle">2</span> Respond</h3>
+                    <p>We must control our <b>response</b> to the events of our lives.</p>
+                    <p>Read through the scenario provide each day, and choose how you would likely respond, and how you <b>should</b> respond.</p>
                 </div>
-                <div class="week col-md-3">
-                    <h3>Weeks Four<h3>
-                    <h4><i>Demo Day</i></h4>
-                    <p>Finally, the cycle concludes with a demo day. Participants are asked to either give a really quick presentation, or present a video of what worked, what didn't and what they learned about their chosen goal.</p>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <hr />
+                    <br />
+                    <h3><span class="circle">3</span> Plan for Adversity</h3>
+                    <p>Finally, planning for adversity means running through all the positive, actionable steps you can take to resolve, mitigate or control a situation.</p>
+                    <p>Once you've controlled your response, you must decide how you will respond. The goal is to respond in a constructive and positive manner, while avoiding unhelpful, negative emotional responses.</p>
                 </div>
             </div>
         </div>
@@ -151,30 +173,28 @@
     <section id="contact" class="container content-section text-center">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
-                <h2>Contact Hack Lab Coordinators</h2>
+                <h2>Contact Plan for Adversity</h2>
                 <p>Feel free to email us with any questions or feedback you may have.</p>
-                <p><a href="mailto:info@hacklabs.me">info@hacklabs.me</a>
+                <p><a href="mailto:info@planadvserity.com">info@planadversity.com</a>
                 </p>
                 <ul class="list-inline banner-social-buttons">
                     <li>
-                        <a href="https://twitter.com/hacklabsmaine" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
+                        <a href="https://twitter.com/planadversity" class="btn btn-success btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
                     </li>
                     <li>
-                        <a href="https://github.com/powellc/hacklabs" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
+                        <a href="https://github.com/powellc/planadversity" class="btn btn-success btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
                     </li>
                 </ul>
             </div>
         </div>
     </section>
 
-    <!-- Map Section -->
-    <div id="map"></div>
     {% endblock body %}
 
     <!-- Footer -->
     <footer>
         <div class="container text-center">
-            <p>Copyright &copy; Maine Hack Labs 2014</p>
+            <p>Copyright &copy; Plan for Adversity 2014</p>
         </div>
     </footer>
 
@@ -186,9 +206,6 @@
 
     <!-- Plugin JavaScript -->
     <script src="{% static "js/jquery.easing.min.js" %}"></script>
-
-    <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
 
     <!-- Custom Theme JavaScript -->
     <script src="{% static "js/grayscale.js" %}"></script>

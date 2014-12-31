@@ -9,7 +9,7 @@ body {
     height: 100%;
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
     color: #fff;
-    background-color: #000;
+    background-color: #36648b;
 }
 
 html {
@@ -45,16 +45,18 @@ p {
 }
 
 a {
-    color: #219ab3;
+    color: #cee;
     -webkit-transition: all .2s ease-in-out;
     -moz-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
+    text-decoration:underline;
 }
 
 a:hover,
 a:focus {
     text-decoration: none;
-    color: #11505d;
+    color: #abb;
+    text-decoration:underline;
 }
 
 .light {
@@ -66,8 +68,10 @@ a:focus {
     border-bottom: 1px solid rgba(255,255,255,.3);
     text-transform: uppercase;
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    background-color: #000;
+    background-color: #36648b;
 }
+
+.navbar a { text-decoration:none; }
 
 .navbar-custom .navbar-brand {
     font-weight: 700;
@@ -123,7 +127,7 @@ a:focus {
 
     .top-nav-collapse {
         padding: 0;
-        background-color: #000;
+        background-color: #36648b;
     }
 
     .navbar-custom.top-nav-collapse {
@@ -139,7 +143,7 @@ a:focus {
     text-align: center;
     color: #fff;
     background: url(../img/intro-bg.jpg) no-repeat bottom center scroll;
-    background-color: #000;
+    background-color: #36648b;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
@@ -388,3 +392,13 @@ body {
 .socialaccount_providers { list-style:none; padding:0; }
 .socialaccount_providers li { display: inline; padding-right:15px;}
 .login-or { font-size: 16pt; padding-bottom:10px; }
+input { color:black; }
+input { width:290px; }
+.circle { border:15px solid white; color:black; background:white; border-radius:48%; padding:0;}
+.left { float:left;  }
+.right { float:right; }
+hr.block { clear:both; }
+.small { font-size:smaller; }
+.well { color:black; }
+textarea { color: black; }
+.justify { text-align:justify; }

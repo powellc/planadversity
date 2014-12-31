@@ -1,37 +1,40 @@
 from django.conf.urls import patterns, url
-from .views import (MeditationListView, MeditationDetailView, MeditationCreateView, 
-                    MeditationUpdateView, MeditationListJSONView, MeditationJoinView,
-                    MeditationLeaveView)
+from .views import MeditationListView, MeditationDetailView, MeditationListJSONView, \
+                   HomepageView, ResponseListView, ResponseDetailView, ResponseCreateView
 
 
 # custom views
 urlpatterns = patterns(
     '',
-    url(r'^meditation/add/',
-        view=MeditationCreateView.as_view(),
-        name="project-create"),
-
-    url(r'^meditations/(?P<slug>[-\w]+)/edit/',
-        view=MeditationUpdateView.as_view(),
-        name="project-update"),
-
     url(r'^meditations.json',
         view=MeditationListJSONView.as_view(),
-        name="project-list-json"),
+        name="meditation-list-json"),
 
     url(r'^meditations/(?P<slug>[-\w]+)/',
         view=MeditationDetailView.as_view(),
-        name="project-detail"),
+        name="meditation-detail"),
 
     #url(r'^meditations.csv',
     #    view=MeditationListCSVView.as_view(),
-    #    name="project-list-csv"),
+    #    name="meditation-list-csv"),
 
     url(r'^meditations/$',
         view=MeditationListView.as_view(),
-        name="project-list"),
+        name="meditation-list"),
+
+    url(r'^responses/create/$',
+        view=ResponseCreateView.as_view(),
+        name="response-create"),
+
+    url(r'^responses/(?P<slug>[-\w\d]+)/',
+        view=ResponseDetailView.as_view(),
+        name="response-detail"),
+
+    url(r'^responses/$',
+        view=ResponseListView.as_view(),
+        name="response-list"),
 
     url("^$", 
-        BuzzListView.as_view(template_name='homepage.html'), 
-        name="homepage")
+        view=HomepageView.as_view(),
+        name="homepage"),
 )

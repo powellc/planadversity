@@ -28,8 +28,6 @@ class Common(Configuration):
     BASE_DIR = os.path.dirname(os.path.dirname(__file__))
     sys.path.insert(0, os.path.join(BASE_DIR, 'planadversity/apps'))
 
-    USE_SOUTH = True
-
     # Quick-start development settings - unsuitable for production
     # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
@@ -39,6 +37,8 @@ class Common(Configuration):
     TEMPLATE_DEBUG = False
 
     ALLOWED_HOSTS = []
+
+    MEDITATION_START_DATE = '2015-01-01'
 
     # Application definition
 
@@ -63,7 +63,7 @@ class Common(Configuration):
         'allauth.socialaccount.providers.google',
         "django_extensions",
         'floppyforms',
-        'south',
+        'meditations',
     )
 
     TEMPLATE_CONTEXT_PROCESSORS = Configuration.TEMPLATE_CONTEXT_PROCESSORS + \
