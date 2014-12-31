@@ -42,7 +42,7 @@ class HomepageView(TemplateView):
         responded = None
 
         try:
-            meditation = Meditation.objects.get(date=datetime.now().date()+timedelta(days=4))
+            meditation = Meditation.objects.get(date=datetime.now().date())
         except:
             pass
 
