@@ -69,7 +69,7 @@ class MeditationListView(JsonView, ListView):
         # TODO: Cache this for one day, only refreshing it if the user asks for a new random
         # TODO: Should grab non-repsonded to meditations if possible
         try:
-            meditation = Meditation.objects.get(date=datetime.now().date()+timedelta(days=4))
+            meditation = Meditation.objects.get(date=datetime.now().date())
             responded = Response.objects.filter(meditation=meditation,
                                                 user=self.request.user.id)
         except:
