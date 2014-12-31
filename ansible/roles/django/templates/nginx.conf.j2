@@ -2,6 +2,7 @@ upstream {{deployment_name}}_gunicorn_process {
     server 127.0.0.1:{{port_number}};
 }
 
+{% if mode != 'Prod' %}
 server {
         listen 80;
 
@@ -42,26 +43,40 @@ server {
                 root /home/{{deployment_name}}/{{mode}}/templates;
         }
 }
+{% if domainname %}
+server {
+    server_name {{domainname}};
+    rewrite ^(.*) http://{{server}}$1 permanent;
+}
+{% endif %}
 
-{% if mode == 'production' %}
+{% else %}
+server {
+    listen 80;
+    server_name {{domainname}};
+    rewrite ^(.*) https://{{server}}$1 permanent;
+}
+{% endif %}
+
+{% if mode == 'Prod' %}
 server {
         listen  443 ssl;
 
         server_name  {{server}};
 
-        ssl_certificate  /etc/nginx/ssl/server.crt;
-        ssl_certificate_key /etc/nginx/ssl/server.key;
+        ssl_certificate  /etc/ssl/certs/{{deployment_name}}.crt;
+        ssl_certificate_key /etc/ssl/private/{{deployment_name}}.key;
 
         access_log  /home/{{deployment_name}}/logs/access.{{mode}}.log;
         error_log /home/{{deployment_name}}/logs/error.{{mode}}.log;
 
         keepalive_timeout 3;
 
-        root {{project_root}}/code{{code_root}}public;                                                                               
+        root /home/{{deployment_name}}/{{mode}}/public;                                                                               
 
         location /media {
              alias /home/{{deployment_name}}/{{code_root}}/public/media;
-	     access_log off;
+    	     access_log off;
              expires 31d;
         }
 
@@ -91,7 +106,8 @@ server {
 {% if domainname %}
 server {
     server_name {{domainname}};
-    rewrite ^(.*) http://{{server}}$1 permanent;
+    rewrite ^(.*) https://{{server}}$1 permanent;
 }
 {% endif %}
+
 {% endif %}

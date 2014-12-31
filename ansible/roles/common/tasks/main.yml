@@ -57,3 +57,6 @@
 
   - name: Copy bash profile to user.
     template: src=bash_profile  dest=/home/{{deployment_name}}/.bash_profile
+
+  - name: Copy the SSl cert
+    copy: src={{deployment_name}}.crt dest="/etc/ssl/certs/{{ deployment_name }}.crt" mode=0666
