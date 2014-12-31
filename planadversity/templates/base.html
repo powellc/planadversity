@@ -110,19 +110,16 @@
         {% if not responded %}
         <form method="POST" action="{% url 'response-create' %}">{% csrf_token %}
         <div class="row">
-            <div class="col-lg-4 col-lg-offset-2">
+            <div class="col-lg-8 col-lg-offset-2">
                 <h2>Initial Response</h2>
-                <p><input width="20" name="initial_response" type="text" placeholder="Your emotional response" />
-            </div>
-            <div class="col-lg-4">
-                <h2>Desired Response</h2>
-                <p><input type="text" name="desired_response" placeholder="Your emotional response" />
+                <p>What emotions would you first feel? It's okay if this is not how you'd like to respond. The point is to be honest with yourself.</p>
+                <p><input width="20" name="initial_response" type="text" />
             </div>
             <div class="col-lg-8 col-lg-offset-2">
                 <p class="justify">Work through the best way to respond, adhering a close as possible to the stoic principals of detachment from what you cannot change, and changing what you can.</p>
                 <p><textarea name="notes" cols="50" rows="10"></textarea></p>
                 {% if not user.is_authenticated %}
-                <p><input class="btn btn-success" type="submit" value="Save & Sign Up" />
+                <p>Save your responses by <a href="{% url 'account_signup' %}">creating an account</a> or <a href="{% url 'account_login' %}">logging in</a> with your Github or Google profiles.</p>
                 {% else %}
                 <p><input class="btn btn-success" type="submit" value="Save" />
                 {% endif %}

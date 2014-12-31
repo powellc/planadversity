@@ -393,7 +393,7 @@ body {
 .socialaccount_providers li { display: inline; padding-right:15px;}
 .login-or { font-size: 16pt; padding-bottom:10px; }
 input { color:black; }
-input { width:290px; }
+#about input { width:750px; color:black; }
 .circle { border:15px solid white; color:black; background:white; border-radius:48%; padding:0;}
 .left { float:left;  }
 .right { float:right; }
