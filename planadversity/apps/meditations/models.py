@@ -40,7 +40,7 @@ class Response(TimeStampedModel):
 
 
     class Meta:
-        ordering = ('created',)
+        ordering = ('-created',)
 
 
     def __unicode__(self):
