@@ -15,6 +15,10 @@ from configurations import Configuration, values
 
 class Common(Configuration):
 
+    # OPTIONS TO OVERRIDE
+    AWS_ACCESS_KEY_ID = values.Value()
+    AWS_SECRET_ACCESS_KEY = values.Value()
+
     ADMINS = (
         ('Admin', 'info@planadversity.me'),
     )
@@ -34,8 +38,6 @@ class Common(Configuration):
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = False
 
-    TEMPLATE_DEBUG = False
-
     ALLOWED_HOSTS = []
 
     MEDITATION_START_DATE = '2015-01-01'
@@ -44,7 +46,6 @@ class Common(Configuration):
 
     INSTALLED_APPS = (
         "django.contrib.admin",
-        "django.contrib.comments",
         "django.contrib.auth",
         "django.contrib.contenttypes",
         "django.contrib.redirects",
@@ -65,12 +66,6 @@ class Common(Configuration):
         'floppyforms',
         'meditations',
     )
-
-    TEMPLATE_CONTEXT_PROCESSORS = Configuration.TEMPLATE_CONTEXT_PROCESSORS + \
-        ("django.core.context_processors.request",
-         "django.core.context_processors.tz",
-         "allauth.account.context_processors.account",
-         "allauth.socialaccount.context_processors.socialaccount",)
 
     MIDDLEWARE_CLASSES = (
         "django.contrib.sessions.middleware.SessionMiddleware",
@@ -135,7 +130,27 @@ class Common(Configuration):
 
     MEDIA_ROOT = os.path.join(BASE_DIR, 'public/media')
 
-    TEMPLATE_DIRS = (os.path.join(BASE_DIR, "planadversity/templates"),)
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [ os.path.join(BASE_DIR, "planadversity/templates") ],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                    # list if you haven't customized them:
+                    'django.contrib.auth.context_processors.auth',
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.i18n',
+                    'django.template.context_processors.media',
+                    'django.template.context_processors.static',
+                    'django.template.context_processors.tz',
+                    'django.core.context_processors.request',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
+        },
+    ]
 
     STATIC_URL = '/static/'
 
@@ -147,9 +162,7 @@ class Common(Configuration):
 
     #DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
-    AWS_ACCESS_KEY_ID = values.Value()
-    AWS_SECRET_ACCESS_KEY = values.Value()
-    AWS_STORAGE_BUCKET_NAME = 'example.com'
+    AWS_STORAGE_BUCKET_NAME = 'planadversity'
     AWS_HEADERS = {'ExpiresDefault': 'access plus 30 days',
                    'Cache-Control': 'max-age=86400', }
 
@@ -188,18 +201,18 @@ class Common(Configuration):
         }
     }
 
+    SECRET_KEY = values.SecretValue()
+
 
 class Dev(Common):
     """
     The in-development settings and the default configuration.
     """
-    DEBUG = TEMPLATE_DEBUG = True
+    DEBUG = True
 
     DATABASES = values.DatabaseURLValue('sqlite:///{0}'.format(
         os.path.join(Common.BASE_DIR, 'db.sqlite3'),
         environ=True))
-
-    SECRET_KEY = 'notasecretatall'
 
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -210,9 +223,7 @@ class Dev(Common):
 
 
 class Stage(Common):
-    DEBUG = TEMPLATE_DEBUG = True
-
-    SECRET_KEY = values.SecretValue()
+    DEBUG = True
 
     EMAIL_HOST = values.Value('localhost')
     EMAIL_HOST_USER = values.Value()
@@ -225,7 +236,7 @@ class Prod(Common):
     """
     The in-production settings.
     """
-    DEBUG = TEMPLATE_DEBUG = False
+    DEBUG = False
 
     SECRET_KEY = values.SecretValue()
 

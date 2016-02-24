@@ -1,11 +1,10 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from .views import MeditationListView, MeditationDetailView, MeditationListJSONView, \
                    HomepageView, ResponseListView, ResponseDetailView, ResponseCreateView
 
 
 # custom views
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^meditations.json',
         view=MeditationListJSONView.as_view(),
         name="meditation-list-json"),
@@ -34,7 +33,6 @@ urlpatterns = patterns(
         view=ResponseListView.as_view(),
         name="response-list"),
 
-    url("^$", 
+    url("^$",
         view=HomepageView.as_view(),
-        name="homepage"),
-)
+        name="homepage")]

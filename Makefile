@@ -1,5 +1,5 @@
 install:
-	virtualenv venv
+	virtualenv -p /usr/bin/python3 venv
 	venv/bin/python setup.py install
 	venv/bin/python manage.py syncdb --noinput
 
