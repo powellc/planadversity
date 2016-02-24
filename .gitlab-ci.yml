@@ -1,5 +1,6 @@
 before_script:
   - apt-get update -qq && apt-get install -y -qq sqlite3 libsqlite3-dev python3-dev libmemcached-dev python3-setuptools
+  - apt-get build-dep python-imaging
 
 test:
   script:
