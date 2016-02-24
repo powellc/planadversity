@@ -78,6 +78,7 @@ setup(
     package_dir={
         'planadversity': 'planadversity',
         'planadversity/templates': 'planadversity/templates',
+        'planadversity/static': 'planadversity/static',
     },
     entry_points={
         'console_scripts': [
